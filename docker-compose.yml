@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  tambola-server:
+    build: ./app
+    container_name: tambola_online_board
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=production

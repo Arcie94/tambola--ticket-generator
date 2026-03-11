@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambola Calling Board</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Tambola Calling Board</h1>
+        <div class="controls">
+          <button id="pickBtn" class="btn primary">Pick Number</button>
+          <button id="resetBtn" class="btn secondary">Reset Game</button>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <aside class="sidebar">
+          <div class="current-number-card">
+            <h2>Latest Pick</h2>
+            <div id="currentNumber" class="current-number">--</div>
+            <p id="numberHistory" class="number-history">Past 5: none</p>
+          </div>
+        </aside>
+
+        <section class="board-area">
+          <div id="boardGrid" class="board-grid">
+            <!-- Numbers 1 to 90 will be generated here by JS -->
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,51 +1,72 @@
-# Free Tambola Ticket Generator
+# Tambola Ticket Generator & Online Calling Board
 
-A simple Python Desktop Application that instantly generates 100 valid, print-ready Tambola (Housie) tickets and saves them as a high-quality PDF.
+A complete solution to play Tambola (Housie) with your friends physically or remotely!
+This project contains two main parts:
 
-## Features
+1. **Desktop App (Ticket Generator)** - Instantly generates 100 valid, print-ready Tambola tickets and saves them as a high-quality PDF.
+2. **Multiplayer Online Board** - A mobile-friendly Web App powered by Docker & WebSockets so the Host can draw numbers while players watch the board update on their phones in real-time.
+
+---
+
+## 🎟️ Part 1: Desktop Ticket Generator
+
+### Features
 
 - **Valid Ticket Generation**: The algorithm ensures exactly 5 numbers per row, properly distributed and sorted by columns (1-9, 10-19, ..., 80-90).
-- **PDF Export**: Uses `fpdf2` to create a clean, A4-sized PDF document.
-- **Print Ready**: Neatly formats 6 tickets per page.
-- **Simple GUI**: Includes a user-friendly desktop interface built with `tkinter`, meaning you just click a button to generate the tickets!
+- **PDF Export**: Uses `fpdf2` to create a clean, A4-sized PDF document (6 tickets per page).
+- **Simple GUI**: Includes a user-friendly desktop interface built with `tkinter`.
 
-## Requirements
+### Usage (Windows)
 
-If you want to run the source code directly, you need Python installed on your machine.
-
-- Python 3.x
-- `fpdf2`
-
-## Installation
-
-Clone the repository and install the required dependencies:
+You can directly download the standalone `.exe` inside the `dist` folder:
 
 ```bash
-git clone https://github.com/Arcie94/tambola--ticket-generator.git
-cd tambola--ticket-generator
-pip install -r requirements.txt
+./dist/Tambola Generator Core.exe
 ```
 
-## Usage
-
-Run the main script to open the application window:
+Or run from source:
 
 ```bash
+pip install -r requirements.txt
 python main.py
 ```
 
-Click the **"Generate 100 Tickets (PDF)"** button. A file named `tambola_tickets.pdf` will be created in the same directory, containing your freshly generated tickets.
+---
 
-## Building a Standalone Executable (Windows)
+## 📱 Part 2: Multiplayer Online Board (Docker)
 
-If you want to share this application with friends who don't have Python installed, you can compile it into a single `.exe` file using PyInstaller:
+To prevent players from accidentally drawing numbers, the Caller Board is now a real-time multiplayer Server.
+
+### Features
+
+- **Two Roles**:
+  - **Player View (`/`)**: View-only board. Players see numbers pop up in real-time.
+  - **Host View (`/host`)**: Password-protected area where the Host clicks "Pick Number".
+- **Real-Time Sync**: Powered by `Flask-SocketIO`. As soon as the host picks a number, all players' screens update instantly without refreshing.
+- **Mobile Friendly**: The 90-number grid gracefully resizes to fit smartly on smartphone screens.
+- **Voice Announcement**: The browser automatically speaks the drawn number aloud.
+
+### Running with Docker (Recommended)
+
+You can host this Board on any server or VPS that has Docker installed. It will be available on Port `5000`.
+
+1. Clone the repository to your server.
+2. Start the container:
 
 ```bash
-pip install pyinstaller
-pyinstaller --onefile --windowed --name "Tambola Generator Core" main.py
+docker-compose up -d --build
 ```
 
-The standalone executable will be generated inside the `dist` folder.
+3. Players access: `http://your-server-ip:5000/`
+4. Host accesses: `http://your-server-ip:5000/host` _(Password: `admin`)_
+
+### Running locally with Python
+
+```bash
+cd app
+pip install -r requirements.txt
+python server.py
+```
 
 ## License
 

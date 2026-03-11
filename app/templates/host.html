@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tambola - Host Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tambola Host Controls</h1>
+            <div class="controls">
+                <button id="pickBtn" class="btn primary">Pick Number</button>
+                <button id="resetBtn" class="btn secondary">Reset Game</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="current-number-card">
+                <h2>Latest Pick</h2>
+                <div id="currentNumber" class="current-number">--</div>
+                <p id="numberHistory" class="number-history">Past 5: none</p>
+            </div>
+
+            <div class="board-area">
+                <div id="boardGrid" class="board-grid">
+                    <!-- Generate 90 cells -->
+                    {% for i in range(1, 91) %}
+                        {% if i in state.history %}
+                            <div class="cell picked" id="cell-{{ i }}">{{ i }}</div>
+                        {% else %}
+                            <div class="cell" id="cell-{{ i }}">{{ i }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

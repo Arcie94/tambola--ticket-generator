@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tambola - Host Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-box">
+        <h1>Host Login</h1>
+        <p>Enter the password to control the board.</p>
+        <form method="POST">
+            <input type="password" name="password" placeholder="Password (admin)" required>
+            {% if error %}<p class="error">{{ error }}</p>{% endif %}
+            <button type="submit" class="btn primary" style="width:100%; margin-top:10px;">Login</button>
+        </form>
+    </div>
+</body>
+</html>
