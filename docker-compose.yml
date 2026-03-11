@@ -9,12 +9,10 @@ services:
       - tambola_net
 
   nginx:
-    image: nginx:alpine
+    build: ./nginx
     container_name: tambola_nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - tambola-server
     restart: unless-stopped
