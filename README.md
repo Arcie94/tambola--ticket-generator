@@ -1,4 +1,4 @@
-# Tambola Ticket Generator
+# Free Tambola Ticket Generator
 
 A simple Python Desktop Application that instantly generates 100 valid, print-ready Tambola (Housie) tickets and saves them as a high-quality PDF.
 
