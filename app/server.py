@@ -37,6 +37,11 @@ def host_view():
         return redirect(url_for('login'))
     return render_template('host.html', state=game_state)
 
+@app.route('/logout')
+def logout():
+    session.pop('is_host', None)
+    return redirect(url_for('player_view'))
+
 # WebSocket Events
 @socketio.on('connect')
 def handle_connect():
