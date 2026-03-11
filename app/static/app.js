@@ -75,15 +75,40 @@ function updateDisplays(number, history, animate = false) {
     }
 
     // History Pick
-    if (history.length === 0) {
-        numberHistoryDisplay.textContent = 'Past 5: none';
-    } else {
-        let past5 = history.slice(-6, -1).reverse();
-        if(past5.length === 0 && history.length > 0) {
-            numberHistoryDisplay.textContent = 'Past 5: none';
-        } else if (past5.length > 0) {
-            numberHistoryDisplay.textContent = `Past 5: ${past5.join(', ')}`;
+    numberHistoryDisplay.innerHTML = '';
+    
+    if (history.length > 0) {
+        // Get the latest 5 numbers (excluding the very current one if it's currently being animated and not finalized yet)
+        // Wait, 'history' already contains the latest picked number at the end.
+        // During the 1.5s spin, we show the history *excluding* the number currently spinning.
+        // If animate is true, the number hasn't finalized yet visually, but it is in 'history'.
+        // To be perfectly accurate: we should show the last 5 finalized numbers.
+        // Let's just always show up to the 5 numbers BEFORE the very last one in history array.
+        let past5 = [];
+        if (history.length > 1) {
+            past5 = history.slice(0, -1).slice(-5).reverse();
         }
+
+        if (past5.length > 0) {
+            past5.forEach(num => {
+                const ball = document.createElement('div');
+                ball.className = 'history-ball';
+                ball.textContent = num;
+                numberHistoryDisplay.appendChild(ball);
+            });
+        } else {
+            const emptyTxt = document.createElement('span');
+            emptyTxt.style.color = '#64748b';
+            emptyTxt.style.fontSize = '12px';
+            emptyTxt.textContent = 'None yet';
+            numberHistoryDisplay.appendChild(emptyTxt);
+        }
+    } else {
+        const emptyTxt = document.createElement('span');
+        emptyTxt.style.color = '#64748b';
+        emptyTxt.style.fontSize = '12px';
+        emptyTxt.textContent = 'None yet';
+        numberHistoryDisplay.appendChild(emptyTxt);
     }
 }
 
