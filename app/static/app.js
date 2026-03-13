@@ -266,20 +266,34 @@ socket.on('bingo_claimed', () => {
     
     overlay.style.display = 'flex';
     
-    // Play an alert sound if the device supports it
+    // Play a loud repeating siren sound
     if ('AudioContext' in window || 'webkitAudioContext' in window) {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = ctx.createOscillator();
             const gainNode = ctx.createGain();
-            oscillator.connect(gainNode);
             gainNode.connect(ctx.destination);
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(880, ctx.currentTime);
-            gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-            oscillator.start(ctx.currentTime);
-            oscillator.stop(ctx.currentTime + 0.8);
+            gainNode.gain.setValueAtTime(1.0, ctx.currentTime); // Full volume
+            
+            const sirenDuration = 0.7;  // Each up/down sweep takes 0.7s
+            const sirenCycles  = 8;     // Repeat 8 times (~5.6 seconds total)
+            
+            for (let i = 0; i < sirenCycles; i++) {
+                const osc = ctx.createOscillator();
+                osc.connect(gainNode);
+                osc.type = 'sawtooth'; // Harsher, more alarm-like than sine
+
+                const startTime = ctx.currentTime + i * sirenDuration;
+                const midTime   = startTime + sirenDuration / 2;
+                const endTime   = startTime + sirenDuration;
+                
+                // Sweep UP then DOWN (police wail effect)
+                osc.frequency.setValueAtTime(440, startTime);
+                osc.frequency.linearRampToValueAtTime(960, midTime);
+                osc.frequency.linearRampToValueAtTime(440, endTime);
+                
+                osc.start(startTime);
+                osc.stop(endTime);
+            }
         } catch(e) {}
     }
     
