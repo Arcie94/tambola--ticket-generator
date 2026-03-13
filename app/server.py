@@ -138,6 +138,16 @@ def handle_claim_bingo():
     """A player claims they have won. Broadcast to everyone."""
     socketio.emit('bingo_claimed')
 
+@socketio.on('lock_bingo')
+def handle_lock_bingo():
+    """Host locks the bingo claim button for all players."""
+    socketio.emit('bingo_locked')
+
+@socketio.on('unlock_bingo')
+def handle_unlock_bingo():
+    """Host unlocks the bingo claim button for all players."""
+    socketio.emit('bingo_unlocked')
+
 if __name__ == '__main__':
     # Run development server
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

@@ -279,3 +279,67 @@ socket.on('bingo_claimed', () => {
         }, 8000);
     }
 });
+
+// --- Listen for bingo_locked (sent to ALL clients) ---
+socket.on('bingo_locked', () => {
+    const claimBtn = document.getElementById('claimBingoBtn');
+    const claimSection = document.querySelector('.bingo-section');
+    if (claimBtn) {
+        claimBtn.disabled = true;
+        claimBtn.textContent = '🔒 Klaim Terkunci';
+        claimBtn.style.background = '#334155';
+        claimBtn.style.boxShadow = 'none';
+    }
+    if (claimSection) {
+        const note = claimSection.querySelector('#lockNote');
+        if (!note) {
+            const p = document.createElement('p');
+            p.id = 'lockNote';
+            p.style.cssText = 'font-size:11px; color:#ef4444; margin-top:6px;';
+            p.textContent = 'Host telah mengunci tombol klaim.';
+            claimSection.appendChild(p);
+        }
+    }
+});
+
+// --- Listen for bingo_unlocked (sent to ALL clients) ---
+socket.on('bingo_unlocked', () => {
+    const claimBtn = document.getElementById('claimBingoBtn');
+    const claimSection = document.querySelector('.bingo-section');
+    if (claimBtn) {
+        claimBtn.disabled = false;
+        claimBtn.textContent = '🏆 KLAIM BINGO!';
+        claimBtn.style.background = 'linear-gradient(135deg, #ef4444, #f97316)';
+        claimBtn.style.boxShadow = '0 4px 20px rgba(239, 68, 68, 0.4)';
+    }
+    if (claimSection) {
+        const note = claimSection.querySelector('#lockNote');
+        if (note) note.remove();
+    }
+});
+
+// --- HOST-ONLY: Lock/Unlock claim button (runs on host page) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const lockClaimBtn = document.getElementById('lockClaimBtn');
+    if (!lockClaimBtn) return;
+    
+    let claimsLocked = true; // Default: locked on game start
+    
+    lockClaimBtn.addEventListener('click', () => {
+        if (claimsLocked) {
+            // Currently locked -> Unlock for players
+            socket.emit('unlock_bingo');
+            claimsLocked = false;
+            lockClaimBtn.textContent = '🔒 Kunci Klaim';
+            lockClaimBtn.style.borderColor = '#ef4444';
+            lockClaimBtn.style.color = '#ef4444';
+        } else {
+            // Currently unlocked -> Lock for players
+            socket.emit('lock_bingo');
+            claimsLocked = true;
+            lockClaimBtn.textContent = '🔓 Buka Klaim';
+            lockClaimBtn.style.borderColor = '#22c55e';
+            lockClaimBtn.style.color = '#22c55e';
+        }
+    });
+});
