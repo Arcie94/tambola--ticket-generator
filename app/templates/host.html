@@ -15,7 +15,6 @@
             <div class="controls">
                 <button id="pickBtn" class="btn primary">Pick Number</button>
                 <div style="display: flex; gap: 10px;">
-                    <button id="lockClaimBtn" class="btn secondary" style="border-color: #22c55e; color: #22c55e;">🔓 Buka Klaim</button>
                     <a href="/generator" class="btn secondary" style="text-decoration: none; text-align: center; border-color: #f59e0b; color: #f8fafc; background: rgba(245, 158, 11, 0.2);">Generate Tickets</a>
                     <button id="resetBtn" class="btn secondary">Reset Game</button>
                     <a href="/logout" class="btn secondary" style="text-decoration: none; text-align: center; border-color: #64748b; color: #cbd5e1;">Log Out</a>
@@ -62,7 +61,12 @@
             </div>
         </div>
 
-        <footer style="text-align: center; font-size: 11px; color: #64748b; margin-top: 15px; padding-bottom: 10px;">
+        <!-- Lock/Unlock Bingo Claim (Host only) -->
+        <div class="bingo-section">
+            <button id="lockClaimBtn" class="btn secondary" style="border-color: #22c55e; color: #22c55e; width: 100%; max-width: 400px;">🔓 Buka Klaim Player</button>
+        </div>
+
+        <footer style="text-align: center; font-size: 11px; color: #64748b; margin-top: 10px; padding-bottom: 10px;">
             &copy; 2026 NIC Youth
         </footer>
     </div>
