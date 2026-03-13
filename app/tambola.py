@@ -8,7 +8,10 @@ def get_decade_range(col):
     else:
         return col * 10, col * 10 + 9
 
-def generate_ticket():
+def generate_ticket(seed_val=None):
+    if seed_val is not None:
+        random.seed(seed_val)
+        
     while True:
         layout = [[0] * 9 for _ in range(3)]
         for r in range(3):
@@ -33,8 +36,17 @@ def generate_ticket():
                     num_idx += 1
     return ticket
 
-def generate_tickets(n):
-    return [generate_ticket() for _ in range(n)]
+def generate_tickets(n, seed_val=None):
+    if seed_val is not None:
+        random.seed(seed_val)
+        
+    tickets = [generate_ticket() for _ in range(n)]
+    
+    # Reset the random seed to system time after generation so it doesn't affect live game
+    if seed_val is not None:
+        random.seed()
+        
+    return tickets
 
 if __name__ == "__main__":
     t = generate_ticket()

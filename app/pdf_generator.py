@@ -1,7 +1,7 @@
 from fpdf import FPDF
 import os
 
-def generate_pdf(tickets, filename):
+def generate_pdf(tickets, filename, seed=None):
     pdf = FPDF(orientation="P", unit="mm", format="A4")
     pdf.set_auto_page_break(False)
     
@@ -25,7 +25,9 @@ def generate_pdf(tickets, filename):
         pdf.set_font("helvetica", "B", 10)
         pdf.set_text_color(100, 100, 100)
         pdf.set_xy(start_x, start_y - 5)
-        pdf.cell(180, 5, f"Tambola Ticket #{i+1}", align="L")
+        
+        ticket_label = f"Ticket ID: {seed}-{i+1}" if seed else f"Tambola Ticket #{i+1}"
+        pdf.cell(180, 5, ticket_label, align="L")
         
         # Draw grid
         pdf.set_line_width(0.5)

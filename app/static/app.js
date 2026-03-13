@@ -137,6 +137,9 @@ socket.on('game_reset', (state) => {
 document.addEventListener('DOMContentLoaded', () => {
     const pickBtn = document.getElementById('pickBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const validateBtn = document.getElementById('validateBtn');
+    const ticketIdInput = document.getElementById('ticketIdInput');
+    const validationResult = document.getElementById('validationResult');
 
     if (pickBtn) {
         pickBtn.addEventListener('click', () => {
@@ -149,6 +152,55 @@ document.addEventListener('DOMContentLoaded', () => {
             if(confirm('Are you absolutely sure you want to reset the board for EVERYONE?')) {
                 socket.emit('reset_game');
             }
+        });
+    }
+
+    if (validateBtn && ticketIdInput && validationResult) {
+        validateBtn.addEventListener('click', () => {
+            const ticketId = ticketIdInput.value.trim();
+            if (!ticketId) return;
+            
+            validateBtn.disabled = true;
+            validateBtn.textContent = '...';
+            
+            fetch(`/api/validate/${ticketId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        validationResult.innerHTML = `<span style="color: #ef4444;">${data.error}</span>`;
+                        validationResult.style.display = 'block';
+                        return;
+                    }
+                    
+                    const ticket = data.ticket;
+                    const drawn = new Set(data.drawn_numbers);
+                    
+                    let gridHtml = '<div class="ticket-preview">';
+                    for (let r = 0; r < 3; r++) {
+                        for (let c = 0; c < 9; c++) {
+                            const val = ticket[r][c];
+                            if (val === 0) {
+                                gridHtml += `<div class="ticket-cell empty"></div>`;
+                            } else {
+                                const isMatched = drawn.has(val);
+                                const cellClass = isMatched ? 'matched' : 'unmatched';
+                                gridHtml += `<div class="ticket-cell ${cellClass}">${val}</div>`;
+                            }
+                        }
+                    }
+                    gridHtml += '</div>';
+                    
+                    validationResult.innerHTML = gridHtml;
+                    validationResult.style.display = 'block';
+                })
+                .catch(err => {
+                    validationResult.innerHTML = `<span style="color: #ef4444;">Error occurred during validation.</span>`;
+                    validationResult.style.display = 'block';
+                })
+                .finally(() => {
+                    validateBtn.disabled = false;
+                    validateBtn.textContent = 'Check';
+                });
         });
     }
 });

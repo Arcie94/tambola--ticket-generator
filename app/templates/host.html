@@ -21,6 +21,15 @@
                 </div>
             </div>
         </header>
+        
+        <div class="validator-card" style="background-color: var(--card-bg); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: center;">
+            <h2 style="color: #cbd5e1; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Quick Validate</h2>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <input type="text" id="ticketIdInput" placeholder="Enter ID (e.g. 84291-5)" style="padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; width: 200px;">
+                <button id="validateBtn" class="btn primary" style="width: auto; padding: 10px 15px;">Check</button>
+            </div>
+            <div id="validationResult" style="margin-top: 15px; display: none;"></div>
+        </div>
 
         <div class="main-content">
             <div class="current-number-card">

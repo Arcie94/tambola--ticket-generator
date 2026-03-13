@@ -51,15 +51,48 @@ def generator_view():
             if num < 1 or num > 500:
                 raise ValueError("Number of tickets must be between 1 and 500.")
             
-            tickets = tambola.generate_tickets(num)
-            filepath = os.path.join('/tmp', 'tambola_tickets.pdf')
-            pdf_generator.generate_pdf(tickets, filepath)
+            # Generate a random 6 digit seed
+            seed = random.randint(100000, 999999)
             
-            return send_file(filepath, as_attachment=True, download_name=f'Tambola_{num}_Tickets.pdf')
+            tickets = tambola.generate_tickets(num, seed_val=seed)
+            filepath = os.path.join('/tmp', 'tambola_tickets.pdf')
+            pdf_generator.generate_pdf(tickets, filepath, seed=seed)
+            
+            return send_file(filepath, as_attachment=True, download_name=f'Tambola_{seed}_{num}Tickets.pdf')
         except Exception as e:
              return render_template('generator.html', error=str(e))
              
     return render_template('generator.html')
+
+@app.route('/api/validate/<ticket_id>')
+def validate_ticket(ticket_id):
+    if not session.get('is_host'):
+        return {"error": "Unauthorized"}, 401
+        
+    try:
+        parts = ticket_id.split('-')
+        if len(parts) != 2:
+            return {"error": "Invalid Format. Expected format: SEED-NUMBER"}, 400
+            
+        seed = int(parts[0])
+        ticket_num = int(parts[1])
+        
+        if ticket_num < 1:
+            return {"error": "Ticket number must be 1 or greater"}, 400
+            
+        # Recreate the ticket deterministically
+        tickets = tambola.generate_tickets(ticket_num, seed_val=seed)
+        target_ticket = tickets[-1] # The last one is the requested ticket number
+        
+        return {
+            "ticket": target_ticket,
+            "drawn_numbers": game_state['history']
+        }
+        
+    except ValueError:
+        return {"error": "Invalid ticket ID format. Use numbers like 832912-5."}, 400
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 @app.route('/logout')
 def logout():
