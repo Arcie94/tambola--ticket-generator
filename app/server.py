@@ -13,7 +13,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 game_state = {
     'unpicked_numbers': list(range(1, 91)),
     'history': [],
-    'current_number': None
+    'current_number': None,
+    'claims_locked': True  # Bingo claims are locked by default
 }
 
 # Dummy Host Password
@@ -129,6 +130,7 @@ def handle_reset_game():
     game_state['unpicked_numbers'] = list(range(1, 91))
     game_state['history'] = []
     game_state['current_number'] = None
+    game_state['claims_locked'] = True  # Re-lock claims on reset
     
     # Broadcast reset
     socketio.emit('game_reset', game_state)
@@ -141,11 +143,13 @@ def handle_claim_bingo():
 @socketio.on('lock_bingo')
 def handle_lock_bingo():
     """Host locks the bingo claim button for all players."""
+    game_state['claims_locked'] = True
     socketio.emit('bingo_locked')
 
 @socketio.on('unlock_bingo')
 def handle_unlock_bingo():
     """Host unlocks the bingo claim button for all players."""
+    game_state['claims_locked'] = False
     socketio.emit('bingo_unlocked')
 
 if __name__ == '__main__':

@@ -117,6 +117,18 @@ socket.on('game_state_sync', (state) => {
     console.log("Syncing state", state);
     renderBoard(state.unpicked_numbers, state.history);
     updateDisplays(state.current_number, state.history, false);
+    
+    // Apply lock state to claim button on initial load
+    if (state.claims_locked) {
+        socket.emit('_apply_lock_ui'); // Trigger local lock UI
+        const claimBtn = document.getElementById('claimBingoBtn');
+        if (claimBtn) {
+            claimBtn.disabled = true;
+            claimBtn.textContent = '🔒 Klaim Terkunci';
+            claimBtn.style.background = '#334155';
+            claimBtn.style.boxShadow = 'none';
+        }
+    }
 });
 
 socket.on('number_picked', (data) => {
