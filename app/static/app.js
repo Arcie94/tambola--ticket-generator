@@ -203,4 +203,79 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+
+    // --- BINGO CLAIM BUTTON (Player only) ---
+    const claimBingoBtn = document.getElementById('claimBingoBtn');
+    const bingoCooldownMsg = document.getElementById('bingoCooldownMsg');
+    
+    if (claimBingoBtn) {
+        const COOLDOWN_SECONDS = 60;
+        
+        claimBingoBtn.addEventListener('click', () => {
+            // Layer 2: Double Confirmation
+            const confirmed = confirm('🏆 Apakah Anda YAKIN ingin mengklaim Bingo?\n\nKlaim palsu akan mengganggu permainan!');
+            if (!confirmed) return;
+            
+            // Send the claim via WebSocket
+            socket.emit('claim_bingo');
+            
+            // Layer 1: 60-second Cooldown
+            claimBingoBtn.disabled = true;
+            let secondsLeft = COOLDOWN_SECONDS;
+            bingoCooldownMsg.style.display = 'block';
+            bingoCooldownMsg.textContent = `Tombol terkunci selama ${secondsLeft} detik...`;
+            
+            const cooldownInterval = setInterval(() => {
+                secondsLeft--;
+                bingoCooldownMsg.textContent = `Tombol terkunci selama ${secondsLeft} detik...`;
+                if (secondsLeft <= 0) {
+                    clearInterval(cooldownInterval);
+                    claimBingoBtn.disabled = false;
+                    bingoCooldownMsg.style.display = 'none';
+                }
+            }, 1000);
+        });
+    }
+    
+    // --- HOST-ONLY: Dismiss Button ---
+    const dismissBingoBtn = document.getElementById('dismissBingoBtn');
+    if (dismissBingoBtn) {
+        dismissBingoBtn.addEventListener('click', () => {
+            const overlay = document.getElementById('bingoOverlay');
+            if (overlay) overlay.style.display = 'none';
+        });
+    }
+});
+
+// --- Listen for bingo_claimed event (EVERYONE sees this) ---
+socket.on('bingo_claimed', () => {
+    const overlay = document.getElementById('bingoOverlay');
+    if (!overlay) return;
+    
+    overlay.style.display = 'flex';
+    
+    // Play an alert sound if the device supports it
+    if ('AudioContext' in window || 'webkitAudioContext' in window) {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+            gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.8);
+        } catch(e) {}
+    }
+    
+    // Auto-dismiss after 8 secs for player view (no dismiss button)
+    const dismissBtn = document.getElementById('dismissBingoBtn');
+    if (!dismissBtn) {
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 8000);
+    }
 });

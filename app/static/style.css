@@ -71,3 +71,17 @@ h1 { font-size: 20px; font-weight: 800; background: linear-gradient(90deg, #3b82
 .ticket-cell.empty { background: transparent; color: transparent; }
 .ticket-cell.matched { background: #22c55e; color: white; }
 .ticket-cell.unmatched { background: var(--secondary-color); color: white; opacity: 0.8;}
+
+/* BINGO CLAIM styles */
+.bingo-section { display: flex; flex-direction: column; align-items: center; margin: 15px 0 5px; }
+.btn-bingo { width: 100%; max-width: 400px; padding: 18px; font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #ef4444, #f97316); color: white; border: none; border-radius: 12px; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4); letter-spacing: 1px; }
+.btn-bingo:active { transform: scale(0.96); }
+.btn-bingo:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; }
+
+.bingo-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 999; animation: fadeIn 0.3s ease; }
+.bingo-popup { background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #ef4444; border-radius: 20px; padding: 30px 40px; text-align: center; box-shadow: 0 0 40px rgba(239,68,68,0.5); animation: popIn 0.4s ease; }
+.bingo-icon { font-size: 60px; animation: shake 0.5s ease infinite alternate; }
+.bingo-text { font-size: 22px; font-weight: 800; color: #ef4444; margin-top: 10px; }
+.bingo-sub { font-size: 14px; color: #94a3b8; margin-top: 5px; }
+@keyframes shake { 0% { transform: rotate(-8deg); } 100% { transform: rotate(8deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

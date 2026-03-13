@@ -37,7 +37,24 @@
                 </div>
             </div>
         </div>
-        <footer style="text-align: center; font-size: 11px; color: #64748b; margin-top: 15px; padding-bottom: 10px;">
+        <!-- BINGO Claim Notification Overlay (hidden by default) -->
+        <div id="bingoOverlay" class="bingo-overlay" style="display:none;">
+            <div class="bingo-popup">
+                <div class="bingo-icon">🚨</div>
+                <div class="bingo-text">A Player is Claiming BINGO!</div>
+                <div class="bingo-sub">Host, please verify the ticket!</div>
+            </div>
+        </div>
+
+        <!-- BINGO Claim Button Area -->
+        <div class="bingo-section">
+            <button id="claimBingoBtn" class="btn-bingo">
+                🏆 KLAIM BINGO!
+            </button>
+            <p id="bingoCooldownMsg" style="display:none; font-size:11px; color:#64748b; margin-top:6px;"></p>
+        </div>
+
+        <footer style="text-align: center; font-size: 11px; color: #64748b; margin-top: 10px; padding-bottom: 10px;">
             &copy; 2026 NIC Youth
         </footer>
     </div>

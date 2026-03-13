@@ -133,6 +133,11 @@ def handle_reset_game():
     # Broadcast reset
     socketio.emit('game_reset', game_state)
 
+@socketio.on('claim_bingo')
+def handle_claim_bingo():
+    """A player claims they have won. Broadcast to everyone."""
+    socketio.emit('bingo_claimed')
+
 if __name__ == '__main__':
     # Run development server
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
