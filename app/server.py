@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, send_file
 from flask_socketio import SocketIO, emit
 import random
+import os
+import tambola
+import pdf_generator
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tambola_super_secret_key_123'
@@ -36,6 +39,27 @@ def host_view():
     if not session.get('is_host'):
         return redirect(url_for('login'))
     return render_template('host.html', state=game_state)
+
+@app.route('/generator', methods=['GET', 'POST'])
+def generator_view():
+    if not session.get('is_host'):
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        try:
+            num = int(request.form.get('num_tickets', 100))
+            if num < 1 or num > 500:
+                raise ValueError("Number of tickets must be between 1 and 500.")
+            
+            tickets = tambola.generate_tickets(num)
+            filepath = os.path.join('/tmp', 'tambola_tickets.pdf')
+            pdf_generator.generate_pdf(tickets, filepath)
+            
+            return send_file(filepath, as_attachment=True, download_name=f'Tambola_{num}_Tickets.pdf')
+        except Exception as e:
+             return render_template('generator.html', error=str(e))
+             
+    return render_template('generator.html')
 
 @app.route('/logout')
 def logout():

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tambola - Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width: 500px; margin-top: 50px;">
+        <header style="justify-content: center;">
+            <h1>Ticket Generator</h1>
+        </header>
+
+        <div class="login-box" style="margin-top: 20px;">
+            <p style="margin-bottom: 20px;">Enter the number of unique Tambola tickets you want to generate (max 500).</p>
+            <form method="POST">
+                <input type="number" name="num_tickets" min="1" max="500" value="100" required>
+                {% if error %}
+                    <p class="error" style="margin-top: 10px;">{{ error }}</p>
+                {% endif %}
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <a href="/host" class="btn secondary" style="text-decoration: none; text-align: center; width: 100%;">Back to Host</a>
+                    <button type="submit" class="btn primary" style="width: 100%;">Download PDF</button>
+                </div>
+            </form>
+        </div>
+        
+        <footer style="text-align: center; font-size: 11px; color: #64748b; margin-top: 15px; padding-bottom: 10px;">
+            &copy; 2026 NIC Youth
+        </footer>
+    </div>
+</body>
+</html>
